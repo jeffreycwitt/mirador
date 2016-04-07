@@ -18,7 +18,7 @@
 
             this.state({
                 tabs : this.tabs,
-                //tabs: [{id:'tocTab', label:'Indices'}, {id:'annotationsTab', label:'Annotations'}],
+                //tabs: [{id:'tocTab', label:'Indices'}, {id:'searchTab', label:'Search'}],
                 //tabs: [{id:'tocTab', label:'Indices'}],
                 selectedTabIndex: 0
             }, true);
@@ -44,7 +44,8 @@
         getTemplateData: function() {
             return {
                 annotationsTab: this.state().annotationsTab,
-                tocTab: this.state().tocTab
+                tocTab: this.state().tocTab,
+                searchTab: this.state().searchTab
             };
         },
         listenForActions: function() {
@@ -79,7 +80,7 @@
                 renderingData.tabs = tabs;
                 if(renderingData.tabs.length === 1){                    
                     // TODO: temporary logic to minimize side panel if only tab is toc and toc is empty
-                    if (renderingData.tabs[0].name === 'toc' && !_this.parent.hasStructures) {
+                    if (renderingData.tabs[0].name === 'toc' && !_this.hasStructures) {
                         jQuery.publish("sidePanelVisibilityByTab." + _this.windowId, false);
                     }
 
