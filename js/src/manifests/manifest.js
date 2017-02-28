@@ -214,7 +214,10 @@
       var _this = this;
       var serviceProperty = _this.jsonLd.service;
       var service = [];
-      if (serviceProperty.constructor === Array){
+      if (serviceProperty === "undefined"){
+        service = null;
+      }
+      else if (serviceProperty.constructor === Array){
         for (var i = 0; i < serviceProperty.length; i++){
           //TODO: should we be filtering search by context
           if (serviceProperty[i]["@context"] === "http://iiif.io/api/search/0/context.json" ||
