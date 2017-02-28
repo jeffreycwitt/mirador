@@ -214,7 +214,7 @@
       var _this = this;
       var serviceProperty = _this.jsonLd.service;
       var service = [];
-      if (serviceProperty === "undefined"){
+      if (serviceProperty === undefined){
         service = null;
       }
       else if (serviceProperty.constructor === Array){
