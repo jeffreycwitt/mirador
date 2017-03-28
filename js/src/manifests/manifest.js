@@ -58,6 +58,16 @@
 
       this.request.done(function(jsonLd) {
         _this.jsonLd = jsonLd;
+        //if (_this.jsonLd.structures === "undefined"){
+          var rangeRequest = jQuery.ajax({
+            url: "http://scta.info/iiif/rothwellcommentary/wettf15/ranges/toc/wrapper",
+            dataType: 'json',
+            async: true
+          });
+          rangeRequest.done(function(data){
+            _this.jsonLd.structures = data.ranges;
+          });
+        //}
       });
     },
     initFromInfoJson: function(infoJsonUrl) {
@@ -96,10 +106,10 @@
         } else if (canvas.thumbnail.hasOwnProperty('service')) {
             service = canvas.thumbnail.service;
             if(service.hasOwnProperty('profile')) {
-               compliance = $.Iiif.getComplianceLevelFromProfile(service.profile);    
+               compliance = $.Iiif.getComplianceLevelFromProfile(service.profile);
             }
             if(compliance === 0){
-                // don't change existing behaviour unless compliance is explicitly 0            
+                // don't change existing behaviour unless compliance is explicitly 0
                 thumbnailUrl = canvas.thumbnail['@id'];
             } else {
                 // Get the IIIF Image API via the @context
