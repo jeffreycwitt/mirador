@@ -59,14 +59,38 @@
       this.request.done(function(jsonLd) {
         _this.jsonLd = jsonLd;
         //if (_this.jsonLd.structures === "undefined"){
-          var rangeRequest = jQuery.ajax({
-            url: "http://scta.info/iiif/rothwellcommentary/wettf15/ranges/toc/wrapper",
+          var inboxRequest = jQuery.ajax({
+            url: "http://sims-dev.library.upenn.edu:8084/iiif/notifications?target=http://scta.info/iiif/rothwellcommentary/penn/manifest",
             dataType: 'json',
             async: true
           });
-          rangeRequest.done(function(data){
-            _this.jsonLd.structures = data.ranges;
+          inboxRequest.done(function(data){
+            var note_url = data.contains[0].url;
+            console.log(note_url);
+            var notificationRequest = jQuery.ajax({
+              url: note_url,
+              dataType: 'json',
+              async: true
+            });
+            notificationRequest.done(function(data){
+              var range_url = data.object;
+              console.log(range_url);
+              var rangeRequest = jQuery.ajax({
+                url: range_url,
+                dataType: 'json',
+                async: true
+              });
+              rangeRequest.done(function(data){
+                _this.jsonLd.structures = data.ranges;
+              });
+
+
+
+            });
+
+
           });
+
         //}
       });
     },
