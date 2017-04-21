@@ -160,13 +160,49 @@
       });
 
       this.element.on('click', function() {
+        console.log("click event fired");
         var windowConfig = {
           manifest: _this.manifest,
           canvasID: null,
           viewType: 'ThumbnailsView'
         };
-        _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
-      });
+
+
+        var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
+        if (response === true){
+          //if (_this.jsonLd.structures === "undefined"){
+            var inboxRequest = jQuery.ajax({
+              url: "http://sims-dev.library.upenn.edu:8084/iiif/notifications?target=http://scta.info/iiif/rothwellcommentary/penn/manifest",
+              dataType: 'json',
+              async: true
+            });
+            inboxRequest.done(function(data){
+              var note_url = data.contains[0].url;
+              console.log(note_url);
+              var notificationRequest = jQuery.ajax({
+                url: note_url,
+                dataType: 'json',
+                async: true
+              });
+              notificationRequest.done(function(data){
+                var range_url = data.object;
+                console.log(range_url);
+                var rangeRequest = jQuery.ajax({
+                  url: range_url,
+                  dataType: 'json',
+                  async: true
+                });
+                rangeRequest.done(function(data){
+                  _this.manifest.jsonLd.structures = data.ranges;
+                  _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
+                });
+              });
+            });
+          }
+          else{
+            _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
+          }
+        });
 
       this.element.find('.preview-image').on('click', function(e) {
         e.stopPropagation();
@@ -177,6 +213,8 @@
         };
         _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
       });
+
+
     },
 
     updateDisplay: function(newWidth) {
