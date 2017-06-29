@@ -194,21 +194,22 @@
         //even though there could be more than one
         if (service.length > 0){
           var service_url = service[0]["@id"];
-          console.log(service_url);
           var lookup_response = confirm("There is an inbox for this resource. Do you want to see if there are any supplemental resources related to this resource?");
           if (lookup_response){
-            var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
-            if (response === true){
             //if (_this.jsonLd.structures === "undefined"){
-              var inboxRequest = jQuery.ajax({
-                //url: "http://sims-dev.library.upenn.edu:8084/iiif/notifications?target=http://scta.info/iiif/rothwellcommentary/penn/manifest",
-                url: service_url,
-                dataType: 'json',
-                async: true
-              });
-              inboxRequest.done(function(data){
-                // 0 index means its only going to get the first notification 
-                var note_url = data.contains[0].url;
+            //temporary service url override for biblissima experiment
+            //service_url = "http://iiif.biblissima.fr/inbox/notifications?target=http://gallica.bnf.fr/iiif/ark:/12148/btv1b8449043q/manifest.json";
+            var inboxRequest = jQuery.ajax({
+              //url: "http://sims-dev.library.upenn.edu:8084/iiif/notifications?target=http://scta.info/iiif/rothwellcommentary/penn/manifest",
+              url: service_url,
+              dataType: 'json',
+              async: true
+            });
+            inboxRequest.done(function(data){
+                // 0 index means its only going to get the first notification
+              var note_url = data.contains[0].url;
+              var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
+              if (response === true){
                 console.log(note_url);
                 var notificationRequest = jQuery.ajax({
                   url: note_url,
@@ -228,11 +229,11 @@
                     _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
                   });
                 });
-              });
-            }
-            else{
-              _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
-            }
+              }
+              else{
+                _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
+              }
+            });
           }
           else{
             _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
