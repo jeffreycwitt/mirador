@@ -170,78 +170,78 @@
 
         /// Begin MIRADOR LDN CUSTOM CODE
         // get ldn service endpoint
-        var serviceProperty = _this.manifest.jsonLd.service;
-        var service = [];
-        if (serviceProperty === undefined){
-          service = null;
-        }
-        else if (serviceProperty.constructor === Array){
-          for (var i = 0; i < serviceProperty.length; i++){
-            if (serviceProperty[i].profile === "http://www.w3.org/ns/ldp#inbox") {
-              //returns the first service object with the correct context
-              service.push(serviceProperty[i]);
-            }
-          }
-        }
-        else if (_this.manifest.jsonLd.service.profile === "http://www.w3.org/ns/ldp#inbox"){
-          service.push(_this.manifest.jsonLd.service);
-        }
-        else {
-          //no service object with the right context is found
-          service = null;
-        }
-        // using 0 index means its only going to get the first endpoint
-        //even though there could be more than one
-        if (service.length > 0){
-          var service_url = service[0]["@id"];
-          var lookup_response = confirm("There is an inbox for this resource. Do you want to see if there are any supplemental resources related to this resource?");
-          if (lookup_response){
-            //if (_this.jsonLd.structures === "undefined"){
-            //temporary service url override for biblissima experiment
-            //service_url = "http://iiif.biblissima.fr/inbox/notifications?target=http://gallica.bnf.fr/iiif/ark:/12148/btv1b8449043q/manifest.json";
-            var inboxRequest = jQuery.ajax({
-              //url: "http://sims-dev.library.upenn.edu:8084/iiif/notifications?target=http://scta.info/iiif/rothwellcommentary/penn/manifest",
-              url: service_url,
-              dataType: 'json',
-              async: true
-            });
-            inboxRequest.done(function(data){
-                // 0 index means its only going to get the first notification
-              var note_url = data.contains[0].url;
-              var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
-              if (response === true){
-                console.log(note_url);
-                var notificationRequest = jQuery.ajax({
-                  url: note_url,
-                  dataType: 'json',
-                  async: true
-                });
-                notificationRequest.done(function(data){
-                  var range_url = data.object;
-                  console.log(range_url);
-                  var rangeRequest = jQuery.ajax({
-                    url: range_url,
-                    dataType: 'json',
-                    async: true
-                  });
-                  rangeRequest.done(function(data){
-                    _this.manifest.jsonLd.structures = data.ranges;
-                    _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
-                  });
-                });
-              }
-              else{
-                _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
-              }
-            });
-          }
-          else{
-            _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
-          }
-        }
-        else{
+        // var serviceProperty = _this.manifest.jsonLd.service;
+        // var service = [];
+        // if (serviceProperty === undefined){
+        //   service = null;
+        // }
+        // else if (serviceProperty.constructor === Array){
+        //   for (var i = 0; i < serviceProperty.length; i++){
+        //     if (serviceProperty[i].profile === "http://www.w3.org/ns/ldp#inbox") {
+        //       //returns the first service object with the correct context
+        //       service.push(serviceProperty[i]);
+        //     }
+        //   }
+        // }
+        // else if (_this.manifest.jsonLd.service.profile === "http://www.w3.org/ns/ldp#inbox"){
+        //   service.push(_this.manifest.jsonLd.service);
+        // }
+        // else {
+        //   //no service object with the right context is found
+        //   service = null;
+        // }
+        // // using 0 index means its only going to get the first endpoint
+        // //even though there could be more than one
+        // if (service.length > 0){
+        //   var service_url = service[0]["@id"];
+        //   var lookup_response = confirm("There is an inbox for this resource. Do you want to see if there are any supplemental resources related to this resource?");
+        //   if (lookup_response){
+        //     //if (_this.jsonLd.structures === "undefined"){
+        //     //temporary service url override for biblissima experiment
+        //     //service_url = "http://iiif.biblissima.fr/inbox/notifications?target=http://gallica.bnf.fr/iiif/ark:/12148/btv1b8449043q/manifest.json";
+        //     var inboxRequest = jQuery.ajax({
+        //       //url: "http://sims-dev.library.upenn.edu:8084/iiif/notifications?target=http://scta.info/iiif/rothwellcommentary/penn/manifest",
+        //       url: service_url,
+        //       dataType: 'json',
+        //       async: true
+        //     });
+        //     inboxRequest.done(function(data){
+        //         // 0 index means its only going to get the first notification
+        //       var note_url = data.contains[0].url;
+        //       var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
+        //       if (response === true){
+        //         console.log(note_url);
+        //         var notificationRequest = jQuery.ajax({
+        //           url: note_url,
+        //           dataType: 'json',
+        //           async: true
+        //         });
+        //         notificationRequest.done(function(data){
+        //           var range_url = data.object;
+        //           console.log(range_url);
+        //           var rangeRequest = jQuery.ajax({
+        //             url: range_url,
+        //             dataType: 'json',
+        //             async: true
+        //           });
+        //           rangeRequest.done(function(data){
+        //             _this.manifest.jsonLd.structures = data.ranges;
+        //             _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
+        //           });
+        //         });
+        //       }
+        //       else{
+        //         _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
+        //       }
+        //     });
+        //   }
+        //   else{
+        //     _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
+        //   }
+        // }
+        // else{
           _this.eventEmitter.publish('ADD_WINDOW', windowConfig);
-        }
+        //}
       });
 
       this.element.find('.preview-image').on('click', function(e) {
