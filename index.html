@@ -82,109 +82,110 @@
        });
 
 
-       //BEGIN LDN PLUGIN
-        notification_urls = []
-        var _this = {}
-        myMiradorInstance.eventEmitter.subscribe("ADD_WINDOW", function(event, data){
-          console.log(data)
-          _this = data
-
-          var serviceProperty = _this.manifest.jsonLd.service;
-          var service = [];
-          if (serviceProperty === undefined){
-            service = null;
-          }
-          else if (serviceProperty.constructor === Array){
-            for (var i = 0; i < serviceProperty.length; i++){
-              if (serviceProperty[i].profile === "http://www.w3.org/ns/ldp#inbox") {
-                //returns the first service object with the correct context
-                service.push(serviceProperty[i]);
-              }
-            }
-          }
-          else if (_this.manifest.jsonLd.service.profile === "http://www.w3.org/ns/ldp#inbox"){
-            service.push(_this.manifest.jsonLd.service);
-          }
-          else {
-            //no service object with the right context is found
-            service = null;
-          }
-          if (service.length > 0){
-            var service_url = service[0]["@id"];
-
-              var inboxRequest = jQuery.ajax({
-                url: service_url,
-                dataType: 'json',
-                async: true
-              });
-              inboxRequest.done(function(data){
-                  // 0 index means its only going to get the first notification
-                for (i = 0; i < data.contains.length; i++){
-                //var note_url = data.contains[0].url;
-                notification_urls.push(data.contains[i].url)
-                }
-                $(".window-manifest-navigation").append("<a href='#' id='notifications'><i class='material-icons'>add_alert</i>" + data.contains.length + "</a>");
-              });
-            }
-          });
-
-          function showNotifications(){
-
-            //var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
-            //if (response === true){
-            jQuery(document.body).append("<div id='notifications-wrapper' style='background: white; position: fixed; width: 50%; height: 50%; top: 25%; left: 25%;'><h1>Notifications of Related Content</h1><ul></ul></div>");
-            for (i = 0; i < notification_urls.length; i++){
-              console.log(notification_urls[i]);
-              note_url = notification_urls[i];
-              var notificationRequest = jQuery.ajax({
-                url: note_url,
-                dataType: 'json',
-                async: true
-              });
-              notificationRequest.done(function(data){
-                var range_url = data.object;
-                console.log(range_url);
-                jQuery("#notifications-wrapper").append("<li><a href='#' class='supplement' data-url='" + range_url + "'>" + range_url + "</a></li>")
-              });
-            }
-
-            //}
-          }
-          function retrieveData(url){
-
-            var rangeRequest = jQuery.ajax({
-              url: url,
-              dataType: 'json',
-              async: true
-            });
-            rangeRequest.done(function(data){
-              _this.manifest.jsonLd.structures = data.ranges;
-
-              console.log('structuresUpdated.' + _this.id)
-              _this.eventEmitter.publish('structuresUpdated');
-            });
-
-          }
-
-          jQuery(document).on("click", "#notifications", function(){
-            console.log("Test1");
-            showNotifications();
-          });
-          jQuery(document).on("click", ".supplement", function(){
-            console.log("Test2");
-            var url = $(this).attr('data-url')
-            retrieveData(url);
-            $("#notifications-wrapper").remove();
-          });
-
-});
+//        //BEGIN LDN PLUGIN
+//         notification_urls = []
+//         var _this = {}
+//         myMiradorInstance.eventEmitter.subscribe("ADD_WINDOW", function(event, data){
+//           console.log(data)
+//           _this = data
+//
+//           var serviceProperty = _this.manifest.jsonLd.service;
+//           var service = [];
+//           if (serviceProperty === undefined){
+//             service = null;
+//           }
+//           else if (serviceProperty.constructor === Array){
+//             for (var i = 0; i < serviceProperty.length; i++){
+//               if (serviceProperty[i].profile === "http://www.w3.org/ns/ldp#inbox") {
+//                 //returns the first service object with the correct context
+//                 service.push(serviceProperty[i]);
+//               }
+//             }
+//           }
+//           else if (_this.manifest.jsonLd.service.profile === "http://www.w3.org/ns/ldp#inbox"){
+//             service.push(_this.manifest.jsonLd.service);
+//           }
+//           else {
+//             //no service object with the right context is found
+//             service = null;
+//           }
+//           if (service.length > 0){
+//             var service_url = service[0]["@id"];
+//
+//               var inboxRequest = jQuery.ajax({
+//                 url: service_url,
+//                 dataType: 'json',
+//                 async: true
+//               });
+//               inboxRequest.done(function(data){
+//                   // 0 index means its only going to get the first notification
+//                 for (i = 0; i < data.contains.length; i++){
+//                 //var note_url = data.contains[0].url;
+//                 notification_urls.push(data.contains[i].url)
+//                 }
+//                 $(".window-manifest-navigation").append("<a href='#' id='notifications'><i class='material-icons'>add_alert</i>" + data.contains.length + "</a>");
+//               });
+//             }
+//           });
+//
+//           function showNotifications(){
+//
+//             //var response = confirm("There is an available table of contents for this codex published by the Scholastic Commentaries and Text Archive (http://scta.info). Would you like to retrieve this table of contents?");
+//             //if (response === true){
+//             jQuery(document.body).append("<div id='notifications-wrapper' style='background: white; position: fixed; width: 50%; height: 50%; top: 25%; left: 25%;'><h1>Notifications of Related Content</h1><ul></ul></div>");
+//             for (i = 0; i < notification_urls.length; i++){
+//               console.log(notification_urls[i]);
+//               note_url = notification_urls[i];
+//               var notificationRequest = jQuery.ajax({
+//                 url: note_url,
+//                 dataType: 'json',
+//                 async: true
+//               });
+//               notificationRequest.done(function(data){
+//                 var range_url = data.object;
+//                 console.log(range_url);
+//                 jQuery("#notifications-wrapper").append("<li><a href='#' class='supplement' data-url='" + range_url + "'>" + range_url + "</a></li>")
+//               });
+//             }
+//
+//             //}
+//           }
+//           function retrieveData(url){
+//
+//             var rangeRequest = jQuery.ajax({
+//               url: url,
+//               dataType: 'json',
+//               async: true
+//             });
+//             rangeRequest.done(function(data){
+//               _this.manifest.jsonLd.structures = data.ranges;
+//
+//               console.log('structuresUpdated.' + _this.id)
+//               _this.eventEmitter.publish('structuresUpdated');
+//             });
+//
+//           }
+//
+//           jQuery(document).on("click", "#notifications", function(){
+//             console.log("Test1");
+//             showNotifications();
+//           });
+//           jQuery(document).on("click", ".supplement", function(){
+//             console.log("Test2");
+//             var url = $(this).attr('data-url')
+//             retrieveData(url);
+//             $("#notifications-wrapper").remove();
+//           });
+//
+ });
 
 
 
 
 
     </script>
-
+    <link rel="stylesheet" type="text/css" href="ldn-plugin.css">
+    <script src="ldn-plugin.js"/>
 
 
 
