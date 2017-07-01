@@ -284,8 +284,8 @@
       });
 
       //added by jeff
-      _this.eventEmitter.subscribe("structuresUpdated", function(){
-        _this.refreshSidePanel();
+      _this.eventEmitter.subscribe("structuresUpdated", function(event, id){
+        _this.refreshSidePanel(id);
       });
       //
       _this.events.push(_this.eventEmitter.subscribe('HIDE_REMOVE_OBJECT.' + _this.id, function(event) {
@@ -536,37 +536,40 @@
       }
     },
     // added by Jeff
-    refreshSidePanel: function() {
-      if (!this.sidePanelAvailable) {
-        return;
-      }
-      var _this = this,
-      tocAvailable = _this.sidePanelOptions.toc,
-      annotationsTabAvailable = _this.sidePanelOptions.annotations,
-      layersTabAvailable = _this.sidePanelOptions.layers,
-      hasStructures = true;
+    refreshSidePanel: function(id) {
+      if (this.id === id){
+        if (!this.sidePanelAvailable) {
+          return;
+        }
+        var _this = this,
+        tocAvailable = _this.sidePanelOptions.toc,
+        annotationsTabAvailable = _this.sidePanelOptions.annotations,
+        layersTabAvailable = _this.sidePanelOptions.layers,
+        hasStructures = true;
 
-      var structures = _this.manifest.getStructures();
-      if (!structures || structures.length === 0) {
-        hasStructures = false;
-      }
-      console.log(_this);
-      jQuery(".toc").remove();
-      this.sidePanel = new $.SidePanel({
-            windowId: _this.id,
-            state: _this.state,
-            eventEmitter: _this.eventEmitter,
-            appendTo: _this.element.find('.sidePanel'),
-            manifest: _this.manifest,
-            canvasID: _this.canvasID,
-            layersTabAvailable: layersTabAvailable,
-            tocTabAvailable: tocAvailable,
-            annotationsTabAvailable: annotationsTabAvailable,
-            hasStructures: hasStructures
-      });
-      console.log(_this.sidePanelVisible);
-      if (_this.sidePanelVisible === false){
-        _this.sidePanelVisibility(!_this.sidePanelVisible, '0.4s');
+        var structures = _this.manifest.getStructures();
+        if (!structures || structures.length === 0) {
+          hasStructures = false;
+        }
+
+        jQuery(_this.appendTo).find(".toc").remove();
+        //jQuery(".toc").remove();
+        this.sidePanel = new $.SidePanel({
+              windowId: _this.id,
+              state: _this.state,
+              eventEmitter: _this.eventEmitter,
+              appendTo: _this.element.find('.sidePanel'),
+              manifest: _this.manifest,
+              canvasID: _this.canvasID,
+              layersTabAvailable: layersTabAvailable,
+              tocTabAvailable: tocAvailable,
+              annotationsTabAvailable: annotationsTabAvailable,
+              hasStructures: hasStructures
+        });
+        console.log(_this.sidePanelVisible);
+        if (_this.sidePanelVisible === false){
+          _this.sidePanelVisibility(!_this.sidePanelVisible, '0.4s');
+        }
       }
 
     },
