@@ -284,8 +284,8 @@
       });
 
       //added by jeff
-      _this.eventEmitter.subscribe("structuresUpdated", function(event, id){
-        _this.refreshSidePanel(id);
+      _this.eventEmitter.subscribe("structuresUpdated." + _this.id, function(){
+        _this.refreshSidePanel();
       });
       //
       _this.events.push(_this.eventEmitter.subscribe('HIDE_REMOVE_OBJECT.' + _this.id, function(event) {
@@ -536,8 +536,8 @@
       }
     },
     // added by Jeff
-    refreshSidePanel: function(id) {
-      if (this.id === id){
+    refreshSidePanel: function() {
+
         if (!this.sidePanelAvailable) {
           return;
         }
@@ -570,7 +570,7 @@
         if (_this.sidePanelVisible === false){
           _this.sidePanelVisibility(!_this.sidePanelVisible, '0.4s');
         }
-      }
+      
 
     },
 
