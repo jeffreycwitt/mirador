@@ -283,10 +283,10 @@
         }
       });
 
-      //added by jeff
-      _this.eventEmitter.subscribe("structuresUpdated." + _this.id, function(){
-        _this.refreshSidePanel();
-      });
+      // //added by jeff
+      // _this.eventEmitter.subscribe("structuresUpdated." + _this.id, function(){
+      //   _this.refreshSidePanel();
+      // });
       //
       _this.events.push(_this.eventEmitter.subscribe('HIDE_REMOVE_OBJECT.' + _this.id, function(event) {
         _this.element.find('.remove-object-option').hide();
@@ -570,7 +570,7 @@
         if (_this.sidePanelVisible === false){
           _this.sidePanelVisibility(!_this.sidePanelVisible, '0.4s');
         }
-      
+
 
     },
 

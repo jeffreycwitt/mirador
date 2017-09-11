@@ -22,7 +22,7 @@
      $(function() {
        // Called without "let" or "var"
        // so we can play with it in the browser
-       myMiradorInstance = Mirador({
+       var mirador = Mirador({
          "id": "viewer",
          "layout": "1x1",
          "data": [
@@ -94,8 +94,9 @@
 
 
 
-
+    
     </script>
+
     <link rel="stylesheet" type="text/css" href="ldn-plugin.css">
     <script src="ldn-plugin.js"/>
 
